@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="300" viewBox="0 0 640 300">
+  <defs>
+    <linearGradient id="kaze-bg" x1="0" y1="0" x2="640" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F6F9FE"/>
+      <stop offset="1" stop-color="#E8F0FB"/>
+    </linearGradient>
+    <linearGradient id="kaze-seal" x1="496" y1="106" x2="584" y2="194" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5B8DEF"/>
+      <stop offset="1" stop-color="#3F6FD1"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="300" rx="24" fill="url(#kaze-bg)"/>
+  <g>
+    <rect x="52" y="86" width="150" height="96" rx="18" fill="#FFFFFF" stroke="#CBD8EE" stroke-width="1.5"/>
+    <path d="M92 182 L92 206 L122 182 Z" fill="#FFFFFF" stroke="#CBD8EE" stroke-width="1.5" stroke-linejoin="round"/>
+    <circle cx="92" cy="134" r="6" fill="#9FB6D9"/>
+    <circle cx="127" cy="134" r="6" fill="#9FB6D9"/>
+    <circle cx="162" cy="134" r="6" fill="#9FB6D9"/>
+  </g>
+  <path d="M218 134 H258" stroke="#A9BCD8" stroke-width="3" stroke-linecap="round"/>
+  <path d="M250 126 L260 134 L250 142" fill="none" stroke="#A9BCD8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g>
+    <rect x="278" y="66" width="150" height="48" rx="12" fill="#FFFFFF" stroke="#CBD8EE" stroke-width="1.5"/>
+    <rect x="294" y="82" width="52" height="6" rx="3" fill="#8FA9CF"/>
+    <rect x="294" y="94" width="94" height="5" rx="2.5" fill="#D7E2F2"/>
+    <rect x="278" y="126" width="150" height="48" rx="12" fill="#FFFFFF" stroke="#CBD8EE" stroke-width="1.5"/>
+    <rect x="294" y="142" width="64" height="6" rx="3" fill="#8FA9CF"/>
+    <rect x="294" y="154" width="84" height="5" rx="2.5" fill="#D7E2F2"/>
+    <rect x="278" y="186" width="150" height="48" rx="12" fill="#FFFFFF" stroke="#CBD8EE" stroke-width="1.5"/>
+    <rect x="294" y="202" width="46" height="6" rx="3" fill="#8FA9CF"/>
+    <rect x="294" y="214" width="100" height="5" rx="2.5" fill="#D7E2F2"/>
+  </g>
+  <path d="M436 134 H476" stroke="#A9BCD8" stroke-width="3" stroke-linecap="round"/>
+  <path d="M468 126 L478 134 L468 142" fill="none" stroke="#A9BCD8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="540" cy="150" r="44" fill="url(#kaze-seal)"/>
+  <path d="M520 151 L534 165 L562 137" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Kaze Spec 引擎",
+    "description": "为 Kaze Spec 预设提供原生工具、钩子和 Kaze Spec Remote。"
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "name": "kaze-spec-plugin",
+  "version": "0.2.0",
+  "description": "Kaze Spec-Driven Development for DeepSeek Harness: turn a wish into a gated, verifiable delivery through requirements, design, tasks, execution, acceptance, and FTA.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kaze Spec contributors",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "spec-driven-development",
+    "requirements",
+    "ears",
+    "plugin",
+    "workflow"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "types": "./lib/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./host": {
+      "types": "./lib/host.d.ts",
+      "default": "./lib/host.js"
+    },
+    "./skills": {
+      "types": "./lib/skills.d.ts",
+      "default": "./lib/skills.js"
+    },
+    "./locale/*.json": "./locale/*.json",
+    "./host/locale/*.json": "./host/locale/*.json",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-sidebar-right",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-workspace"
+      ]
+    }
+  },
+  "files": [
+    "lib",
+    "src",
+    "scripts",
+    "test",
+    "vendor",
+    "locale",
+    "host/locale",
+    "docs",
+    "cordis.patch.yml",
+    "cordis.timeline.patch.yml",
+    "cordis.team.patch.yml",
+    "core",
+    "README.md",
+    "README.zh.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "generate:skills": "node scripts/generate-skills.mjs",
+    "test": "node scripts/test.mjs",
+    "verify": "node scripts/verify.mjs"
+  },
+  "engines": {
+    "dsh": ">=0.2.2-rc.5",
+    "node": ">=24.9.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": ">=4.1.0",
+    "@deepseek-ai/dsh-client-ui-sidebar-right": ">=0.2.2-rc.5",
+    "react": "^19.0.0"
+  },
+  "dependencies": {
+    "zod": "4.6.6"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.0",
+    "mermaid": "11.12.1"
+  }
+}

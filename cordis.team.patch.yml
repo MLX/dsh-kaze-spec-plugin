@@ -1,0 +1,7 @@
+# Optional: native DSH Agent Team alongside Kaze Spec.
+# The base already mounts the Team service and its tools; this changes the
+# existing row's config so new root Sessions start in Team mode.
+- id: agent-team
+  config:
+    maxTasks: 256
+    defaultEnabled: true

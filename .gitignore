@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Local build and test output
+coverage/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Workspace data produced while using Kaze on this repository
+.kaze/
+
+# Never ship agent instruction files with this package
+AGENTS.md
+AGENTS.kaze.md
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

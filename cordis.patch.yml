@@ -1,0 +1,195 @@
+- insert:
+    - id: kaze-spec-host
+      name: 'kaze-spec-plugin/host'
+    - id: kaze-spec
+      name: 'kaze-spec-plugin'
+    - id: preset-kaze-spec
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: kaze-spec
+        name: Kaze 规格驱动开发
+        description: 用 Kaze 工作流进行规格驱动开发，让一句模糊的许愿，经探索、需求、设计、任务、执行与验收，最终成为可验证、可复现的高质量交付。
+        order: 2
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: |
+                You are Kaze Spec, a coding agent powered by the {{model}} model.
+
+                For spec work, `.kaze` and `state.json` are authoritative. Use the
+                native `kaze_spec_*` tools for state, validation, gates, tasks, review,
+                rename, and Timeline projection, and the `/spec-*` skills for phase
+                work. Keep every phase gate, never invent APIs, paths, flags, packages,
+                or commands, and report exact verification evidence. For a direct code
+                change, follow the core pack's `vibe.md`: goal contract, small context, smallest
+                diff, executable verification, and drift review.
+
+                Do not mirror spec tasks into `todo_write` or the Team board; those are
+                execution surfaces. `tasks.md` plus `kaze_spec_task` is the only spec task
+                state, and Timeline is a one-way projection. While a spec is in the
+                execute phase the Host denies those mirroring tools.
+
+                Keep normative instructions in English and answer the user in their
+                language. The `kaze:spec-context` runtime block states this
+                workspace's `language`, `maxParallel`, and `strict`; treat it as
+                authoritative and do not re-read `.kaze/spec-config.json` while it
+                is present. Use the selected language's headings and EARS patterns;
+                task markers stay unchanged. Cap one execution wave at `maxParallel`
+                independent tasks. When the block is absent (a workspace without
+                `.kaze` yet), read `.kaze/spec-config.json` or fall back to
+                `zh-CN`, 3, and strict off. The Kaze menu localizes command tokens
+                to Chinese or English. Never bypass a failed gate or re-enable a
+                hook the Kaze settings turned off.
+
+                When `language` is `zh-CN`, use Chinese section headings/EARS consistently:
+
+                ```text
+                requirements: # 需求文档 / ## 引言 / ## 术语表 / ## 需求 / ### 需求 N: 标题 / #### 验收标准 / **用户故事：**
+                design:       # 设计文档 / ## 概述 / ## 架构 / ## 组件与接口 / ## 数据模型 / ## 正确性属性 / ## 错误处理 / ## 测试策略
+                brownfield:   ## 现有系统调研 / ## 对现有系统的影响 / ## 迁移与向后兼容 / 应继续
+                tasks:        # 实施计划 / ## 概述 / ## 任务 / ## 备注 / ## 任务依赖图
+                acceptance:   # 验收 / ## 目标 / ## 成功标准 / ## 验证
+                research:     ## 决策 / ## 理由 / ## 备选方案 / ## 未解决问题
+                properties:   ### 属性 N：标题 / **验证：需求 X.Y**
+                ```
+
+                Chinese EARS patterns: `当...时，系统应...`; `如果...，则系统应...`;
+                `在...期间，系统应...`; `在...情况下，系统应...`; `系统应...`; `应继续...`.
+                Task checkboxes and task ids stay unchanged. When `language` is `en`, use the English
+                headings and EARS patterns.
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: tool-bash
+            name: '@deepseek-ai/dsh-tool-bash'
+            disabled: !!js process.platform === 'win32'
+          - id: tool-pwsh
+            name: '@deepseek-ai/dsh-tool-pwsh'
+            disabled: !!js process.platform !== 'win32'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+            config:
+              # Set false to drop the apply_patch tool beside edit.
+              applyPatch: false
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+            config:
+              sampleOverCapGlobResults: false
+          - id: tool-jobs
+            name: '@deepseek-ai/dsh-tool-jobs'
+          - id: tool-schedule
+            name: '@deepseek-ai/dsh-tool-schedule'
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+            config:
+              customSkillDirs:
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('@deepseek-ai/dsh-agent-preset/package.json')), 'skills')
+          - id: kaze-spec-skills
+            name: 'kaze-spec-plugin/skills'
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
+          - id: command-goal
+            name: '@deepseek-ai/dsh-command-goal'
+          - id: tool-goal
+            name: '@deepseek-ai/dsh-tool-goal'
+          - id: planning
+            name: cordis:group
+            group: true
+            isolate:
+              planMode: true
+            config:
+              - id: plan-mode
+                name: '@deepseek-ai/dsh-plan-mode'
+                config:
+                  section: |
+                    You are in plan mode. Stay in plan mode until the user approves your plan through exit_plan_mode or switches the session mode. Imperative language to implement changes means plan the implementation, not execute it. A user's conversational agreement — including an answer confirming something you asked — approves nothing and does not end plan mode; fold the confirmed decision into the plan and submit it through exit_plan_mode.
+
+                    Explore first. Use non-mutating reads, searches, static analysis, and checks to ground the plan in the actual repository. Do not edit or write files, change configuration, run formatters or code generation that rewrites tracked files, commit, or otherwise carry out the plan. Prefer existing functions and patterns over new machinery.
+
+                    The tool catalog stays the same across modes for request-cache stability. These plan-mode rules override any later tool description or guidance that suggests using mutation tools; those tools remain listed to keep the tool catalog unchanged. Do not use todo_write to track this planning phase: it tracks implementation after an approved plan, while the plan itself belongs in exit_plan_mode.
+
+                    Resolve discoverable facts by inspection. Use ask_user_question only for user-owned choices or material ambiguity that inspection cannot answer. Do not ask the user where code lives or how current behavior works when you can find out.
+
+                    Make the plan decision-complete: state the goal and success criteria; group implementation changes by subsystem; identify public API, schema, and data-flow changes; cover edge cases, failure modes, tests, acceptance criteria, and explicit assumptions. Keep it concise enough to review but detailed enough that another engineer can implement it without making design decisions.
+
+                    When ready, call exit_plan_mode with the complete plan markdown, starting with a # title. Make exit_plan_mode the only and final tool call in that assistant response: it presents the plan for approval, and implementation begins only in a later step after approval. Do not paste the final plan as a plain reply or ask "should I proceed?" through prose or ask_user_question. If review rejects it, incorporate the feedback and present again. If the review channel is unavailable or aborted, stay in plan mode and ask the user to switch modes manually; do not proceed with implementation.
+
+                    Kaze planning guidance:
+                    - For spec work, read `.kaze/<feature>/state.json` and the current phase documents before proposing changes.
+                    - Do not create or edit spec documents in plan mode.
+                    - Reference the spec path and phase in the plan.
+                    - If `acceptance.md` exists, include how each success criterion will be verified.
+                    - On approval, hand off to `/spec-apply` for spec work or `/vibe` for direct coding.
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
+          - id: delegation
+            name: cordis:group
+            group: true
+            isolate:
+              workflowEngine: true
+            config:
+              - id: tool-subagent-control
+                name: '@deepseek-ai/dsh-tool-subagent-control'
+                config:
+                  interrupt: false
+              - id: tool-subagent
+                name: '@deepseek-ai/dsh-tool-subagent'
+                config:
+                  provider: spawn
+                  toolName: subagent
+                  modelSelection: true
+                  modelDiscovery: true
+              - id: tool-subagent-fork
+                name: '@deepseek-ai/dsh-tool-subagent'
+                config:
+                  provider: fork
+                  toolName: subagent_fork
+              - id: workflow-ptc
+                name: '@deepseek-ai/dsh-workflow-ptc'
+                config:
+                  provider: spawn
+              - id: tool-workflow
+                name: '@deepseek-ai/dsh-tool-workflow'
+          - id: tool-ask-user
+            name: '@deepseek-ai/dsh-tool-ask-user'
+          - id: tool-todo
+            name: '@deepseek-ai/dsh-tool-todo'
+            config:
+              allowParallelInProgress: true
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: true
+              searchTimeoutMs: 60000
+          - id: tool-cordis
+            name: '@deepseek-ai/dsh-tool-cordis'
+          - id: present
+            name: '@deepseek-ai/dsh-tool-present'
+          - id: tool-office
+            name: '@deepseek-ai/dsh-tool-office'
+          - id: tool-plugin-manager
+            name: '@deepseek-ai/dsh-plugin-manager/tools'
+            disabled: !!js "!ctx.get('profileContext')"
+          - id: tool-plugin-market
+            name: '@deepseek-ai/dsh-plugin-market/tools'
+            disabled: true
+

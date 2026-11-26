@@ -1,0 +1,8 @@
+# Optional variant that also enables DSH's native Timeline plugin.
+- insert:
+    - id: kaze-spec-host
+      name: 'kaze-spec-plugin/host'
+    - id: kaze-spec
+      name: 'kaze-spec-plugin'
+    - id: timeline-experimental
+      name: '@deepseek-ai/dsh-timeline'

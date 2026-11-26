@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Kaze Spec-Driven Development",
+    "description": "Kaze connects wish-driven development with high-quality delivery: a single fuzzy wish travels through exploration, requirements, design, tasks, execution, and acceptance, and becomes verifiable, reproducible, high-quality delivery.",
+    "detail": "docs/DETAIL.md"
+  }
+}

@@ -1,0 +1,12 @@
+# Keep source, Markdown, JSON, YAML, and generated JavaScript consistent across
+# Windows and POSIX checkouts. The plugin does not depend on CRLF.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
