@@ -116,7 +116,7 @@ function normalizeWorkflow(value: unknown, specType: SpecType): Workflow {
   return DEFAULT_WORKFLOW
 }
 
-function normalizeDesignDetail(value: unknown): DesignDetail {
+export function normalizeDesignDetail(value: unknown): DesignDetail {
   return typeof value === 'string' && (DESIGN_DETAILS as readonly string[]).includes(value)
     ? (value as DesignDetail)
     : DEFAULT_DESIGN_DETAIL

@@ -15,7 +15,7 @@ import {
   writeJson,
   type Phase,
 } from './paths.js'
-import { loadState, gateErrors, saveState, type SpecState } from './state.js'
+import { loadState, gateErrors, normalizeDesignDetail, saveState, type SpecState } from './state.js'
 import { mergeRequirements } from './living.js'
 import { pruneIdleFeature } from './queue.js'
 
@@ -107,6 +107,7 @@ async function readStateSafe(dir: string): Promise<SpecState | null> {
       specType: value.specType === 'bugfix' ? 'bugfix' : 'feature',
       scope: value.scope === 'brownfield' || value.scope === 'greenfield' ? value.scope : 'unknown',
       workflow: typeof value.workflow === 'string' ? (value.workflow as SpecState['workflow']) : 'requirements-first',
+      designDetail: normalizeDesignDetail(value.designDetail),
       phase: (typeof value.phase === 'string' ? value.phase : 'done') as Phase,
       createdAt: typeof value.createdAt === 'string' ? value.createdAt : nowIso(),
       updatedAt: typeof value.updatedAt === 'string' ? value.updatedAt : nowIso(),
